@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="android-chrome-512x512.png">
+    <meta name="google-site-verification" content="vqq11CWNVkLVnZvjCeZReKc8-FRmgxek2SOWjr35CbY" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>ESP32-WiFi-TempSensor | ESP32-based WiFi temperature and humidity monitoring system using UDP communication. This project sends sensor data from a DHT11 sensor to a remote device via UDP and allows remote control of the data transmission interval.</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="ESP32-WiFi-TempSensor" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ESP32-based WiFi temperature and humidity monitoring system using UDP communication. This project sends sensor data from a DHT11 sensor to a remote device via UDP and allows remote control of the data transmission interval." />
+<meta property="og:description" content="ESP32-based WiFi temperature and humidity monitoring system using UDP communication. This project sends sensor data from a DHT11 sensor to a remote device via UDP and allows remote control of the data transmission interval." />
+<link rel="canonical" href="https://esmail-sarhadi.github.io/ESP32-WiFi-TempSensor/" />
+<meta property="og:url" content="https://esmail-sarhadi.github.io/ESP32-WiFi-TempSensor/" />
+<meta property="og:site_name" content="ESP32-WiFi-TempSensor" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="ESP32-WiFi-TempSensor" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"ESP32-based WiFi temperature and humidity monitoring system using UDP communication. This project sends sensor data from a DHT11 sensor to a remote device via UDP and allows remote control of the data transmission interval.","headline":"ESP32-WiFi-TempSensor","name":"ESP32-WiFi-TempSensor","url":"https://esmail-sarhadi.github.io/ESP32-WiFi-TempSensor/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/ESP32-WiFi-TempSensor/assets/css/style.css?v=4ebda87686df307ce1f82e42683f5ceb86b3459e">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/ESP32-WiFi-TempSensor/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+
+      
+<h1 id="esp32-wifi-tempsensor">ESP32-WiFi-TempSensor</h1>
+
+<p>This project implements a WiFi-based temperature and humidity monitoring system using an ESP32 microcontroller. It utilizes a DHT11 sensor for environmental measurements and communicates the data to a remote device using UDP protocol.</p>
+
+<p><img src="/ESP32-WiFi-TempSensor/Scenario.jpg" alt="Alt text" /></p>
+
+<h2 id="features">Features</h2>
+
+<ul>
+  <li>WiFi communication using UDP</li>
+  <li>Temperature and humidity monitoring using DHT11 sensor</li>
+  <li>Remote control of data transmission interval</li>
+  <li>RSSI (Received Signal Strength Indicator) reporting</li>
+  <li>Static IP configuration</li>
+</ul>
+
+<h2 id="hardware-requirements">Hardware Requirements</h2>
+
+<ul>
+  <li>ESP32 development board</li>
+  <li>DHT11 temperature and humidity sensor</li>
+  <li>Appropriate power supply</li>
+</ul>
+
+<h2 id="software-dependencies">Software Dependencies</h2>
+
+<ul>
+  <li>Arduino IDE</li>
+  <li>ESP32 board support for Arduino</li>
+  <li>WiFi library (built-in with ESP32 board support)</li>
+  <li>WiFiUdp library (built-in with ESP32 board support)</li>
+  <li>DHT sensor library</li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+
+<ol>
+  <li>Install the Arduino IDE and ESP32 board support.</li>
+  <li>Install the required libraries:
+    <ul>
+      <li>DHT sensor library</li>
+    </ul>
+  </li>
+  <li>Clone this repository or download the source code.</li>
+  <li>Open the <code class="language-plaintext highlighter-rouge">.ino</code> file in Arduino IDE.</li>
+</ol>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Before uploading the code, make sure to configure the following parameters:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ssid</span> <span class="o">=</span> <span class="s">"name"</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">password</span> <span class="o">=</span> <span class="s">"pass"</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">numNode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">numPeriod</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span>
+<span class="n">IPAddress</span> <span class="nf">localDevIP</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">168</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">110</span><span class="p">);</span>
+<span class="n">IPAddress</span> <span class="nf">remoteDevIP</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">168</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">102</span><span class="p">);</span>
+<span class="n">IPAddress</span> <span class="nf">gateway</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">168</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">IPAddress</span> <span class="nf">subnet</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">localUdpPort</span> <span class="o">=</span> <span class="mi">61500</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">remoteUdpPort</span> <span class="o">=</span> <span class="mi">61501</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Set your WiFi SSID and password</li>
+  <li>Adjust the local and remote IP addresses, gateway, and subnet to match your network configuration</li>
+  <li>Modify the UDP ports if necessary</li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+
+<ol>
+  <li>Upload the code to your ESP32.</li>
+  <li>Open the Serial Monitor to view debug information.</li>
+  <li>The ESP32 will connect to the specified WiFi network and start sending data to the remote IP address.</li>
+  <li>The remote device can send a new transmission interval (in milliseconds) to the ESP32 to change the data sending frequency.</li>
+</ol>
+
+<h2 id="data-format">Data Format</h2>
+
+<p>The ESP32 sends data in the following format:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Node=1 &amp; Counter=1 &amp; Temperature=25.50 &amp; Humidity=60.00 &amp; RSSI=-70
+</code></pre></div></div>
+
+<h2 id="remote-control">Remote Control</h2>
+
+<p>Send a UDP packet containing a number (in milliseconds) to change the transmission interval. For example, sending “5000” will change the interval to 5 seconds.</p>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>Contributions to improve the project are welcome. Please feel free to submit a Pull Request.</p>
+<h2 id="profile">Profile</h2>
+
+<p>Check out my GitHub profile: <a href="https://github.com/Esmail-sarhadi" target="_blank">Esmail Sarhadi</a></p>
+
+<h2 id="project-link">Project Link</h2>
+
+<p>View this project on GitHub: <a href="https://github.com/Esmail-sarhadi/ESP32-WiFi-TempSensor" target="_blank">ESP32-WiFi-TempSensor</a></p>
+
+<h2 id="donation">Donation</h2>
+
+<p>If you find this project helpful, consider making a donation:</p>
+<p><a href="https://nowpayments.io/donation?api_key=REWCYVC-A1AMFK3-QNRS663-PKJSBD2&source=lk_donation&medium=referral" target="_blank">
+     <img src="https://nowpayments.io/images/embeds/donation-button-black.svg" alt="Crypto donation button by NOWPayments">
+</a></p>
+<h2 id="license">License</h2>
+
+<p>This project is open-source and available under the <a href="/ESP32-WiFi-TempSensor/LICENSE">MIT License</a>.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/Esmail-sarhadi/ESP32-WiFi-TempSensor/edit/main/README.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
